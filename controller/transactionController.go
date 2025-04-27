@@ -3,6 +3,8 @@ package controller
 import (
 	"desafio-itau-golang/models"
 	"errors"
+	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -39,8 +41,24 @@ func CreateTransaction(c *gin.Context) {
 	c.JSON(201, newTransaction)
 }
 
-func DeleteTransaction() {
+func DeleteTransaction(c *gin.Context) {
+	id := c.Param("id")
+	idInt := 0
+	if _, err := fmt.Sscanf(id, "%d", &idInt); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		return
+	}
 
+	for index, trans := range transaction {
+		if trans.ID == idInt {
+			transaction = append(transaction[:index], transaction[index+1:]...)
+			c.JSON(http.StatusOK, gin.H{
+				"message": "Todas as informações foram apagadas com sucesso!",
+			})
+			return
+		}
+	}
+	c.JSON(http.StatusNotFound, gin.H{"error": "Transação não encontrada"})
 }
 
 func GetStatistics() {

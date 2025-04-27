@@ -6,9 +6,9 @@ import (
 )
 
 func HandleRequest(r *gin.Engine) {
-	request := r.Group("/")
+	router := r.Group("/")
 
-	request.POST("transacao", controller.CreateTransaction)
+	router.POST("transacao", controller.CreateTransaction)
 	// request.GET("estatisticas", controller.GetStatistics)
-	// request.DELETE("transaction/:id", controller.DeleteTransaction)
+	router.DELETE("transacao/:id", controller.DeleteTransaction)
 }
